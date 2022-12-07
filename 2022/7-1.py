@@ -14,29 +14,20 @@ class Tree:
 
 sizes = dict()
 def getSize(node, daSize = 0):
-    tempSize = 0
-    global sizes
-    daSize += node.size
-    print(f'made it to: {node}')
-    if len(node.children) == 0:
-        print('returning size')
-        print(f'daSize: {daSize}')
-        return daSize
-    else:
-        #node.showChildren()
-        tempSize += daSize
+    # if a directory, iterate through
+    if node.size == 0:
         daSize = 0
         for c in node.children:
-            print(f'exploring {c}')
-            daSize = getSize(c, daSize)
-            sizes[node.data] = daSize
-            tempSize += daSize
+            daSize += getSize(c, daSize)
         sizes[node.data] = daSize
-        return tempSize
+        return 0
+    else:
+        return node.size
+    # if a file, return size
 def main():
     root = Tree("/")
     curr = None
-    file1 = open('7-test.txt', 'r')
+    file1 = open('7-1.txt', 'r')
     Lines = file1.readlines()
 
     for l in Lines:
@@ -73,12 +64,23 @@ def main():
                 curr.children.append(temp)
 
     daNode = root
-    print(daNode)
-    daNode.showChildren()
-    print(getSize(daNode))
-    print(sizes)
+    # print(daNode)
+    # daNode.showChildren()
+    getSize(daNode)
+    #print(sizes)
+    finder = "/"
+    total = 0
     daSum = 0
+    totalSizes = dict()
     for key, val in sizes.items():
+        totalSizes[key] = val
+        for key2, val2, in sizes.items():
+            if key2 != key:
+                if key2.startswith(key):
+                    totalSizes[key] += val2
+    #print (totalSizes)
+   
+    for key, val in totalSizes.items():
         if val <=100000:
             daSum += val
 
