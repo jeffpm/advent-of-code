@@ -78,12 +78,21 @@ def main():
             if key2 != key:
                 if key2.startswith(key):
                     totalSizes[key] += val2
-    # print (totalSizes)
-   
-    for key, val in totalSizes.items():
-        if val <=100000:
-            daSum += val
+    print (totalSizes)
+    totalSizes = dict(sorted(totalSizes.items(), key=lambda item: item[1]))
+    print (totalSizes)
+    totalSpace = 70000000
+    updateAmountNeeded = 30000000
+    unusedSpace = totalSpace - totalSizes['/']
+    #print(unusedSpace)
 
-    print(daSum)
+    for key, val in totalSizes.items():
+        if val + unusedSpace >= updateAmountNeeded:
+            print(val)
+            break
+    #     if val <=100000:
+    #         daSum += val
+
+    # print(daSum)
 if __name__ == "__main__":
     main()
