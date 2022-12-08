@@ -17,41 +17,15 @@ def main():
         for col, val in enumerate(x):
             if not (row == 0 or row == size - 1 or col == 0 or col == size - 1):
                 score = 1
-                left = trees[row][0:col][::-1]
-                counter = 0
-                for count, height in enumerate(left):
-                    counter = count + 1
-                    if height >= val:
-                        break
-                score *= counter
-
-                right = trees[row][col+1:size]
-                counter = 0
-                for count, height in enumerate(right):
-                    counter = count + 1
-                    if height >= val:
-                        break
-                score *= counter
-
-                up = trees[:,col][0:row][::-1]
-                counter = 0
-                for count, height in enumerate(up):
-                    counter = count + 1
-                    if height >= val:
-                        break
-                score *= counter
-
-                down = trees[:,col][row+1:size]
-                counter = 0
-                for count, height in enumerate(down):
-                    counter = count + 1
-                    if height >= val:
-                        break
-                score *= counter
-
+                for t in [trees[row][0:col][::-1], trees[row][col+1:size], trees[:,col][0:row][::-1], trees[:,col][row+1:size]]:
+                    for count, height in enumerate(t):
+                        counter = count + 1
+                        if height >= val:
+                            break
+                    score *= counter
                 if score > maxScore:
                     maxScore = score
-                
+            
     print(f'answer: {maxScore}')
     
 if __name__ == "__main__":

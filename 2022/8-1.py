@@ -16,23 +16,10 @@ def main():
     for row, x in enumerate(trees):
         for col, val in enumerate(x):
             if not (row == 0 or row == size - 1 or col == 0 or col == size - 1):
-                left = trees[row][0:col]
-                if not any(z >= val for z in left):
-                    numVisible += 1
-                    continue
-                right = trees[row][col+1:size]
-                if not any(z >= val for z in right):
-                    numVisible += 1
-                    continue
-                up = trees[:,col][0:row]
-                if not any(z >= val for z in up):
-                    numVisible += 1
-                    continue
-                down = trees[:,col][row+1:size]
-                if not any(z >= val for z in down):
-                    numVisible += 1
-                    continue
-           
+                for t in [trees[row][0:col], trees[row][col+1:size], trees[:,col][0:row], trees[:,col][row+1:size]]:
+                    if not any(z >= val for z in t):
+                        numVisible += 1
+                        break           
     print(f'answer: {numVisible}')
 if __name__ == "__main__":
     main()
