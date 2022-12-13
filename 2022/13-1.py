@@ -8,10 +8,10 @@ def convert(input, level = 0):
         if c == '[':
             print(f'level: {level} - adding [ to stack: {stack}')
             stack.append('[')
+            startPos.append(x)
             if len(stack) > 1:
-                startPos.append(x)
-                startChar = x
-                print(f'startChar: {x}')
+                # startChar = x
+                print(f'startChar: {startPos[-1]}')
         elif c == ']':
             if len(stack) == 1 and stack[-1] == '[':
                 print(f'level: {level} - finished with list: {tempList}')
@@ -20,15 +20,15 @@ def convert(input, level = 0):
                     return tempList
             else:
                 # print(f'input: {input}')
-                print(f'startChar: {startChar}')
-                print(f'level: {level} - trying to add {input[startChar:x+1]}')
-                tempList.append(convert(input[startChar:x+1], level + 1))
+                print(f'startChar: {startPos[-1]}')
+                print(f'level: {level} - trying to add {input[startPos[-1]:x+1]}')
+                tempList.append(convert(input[startPos[-1]:x+1], level + 1))
                 stack.pop(-1)
-                startChar = ""
+                startPos.pop(-1)
         elif c == ',':
             pass
         else:
-            if startChar == "":
+            if len(startPos) <= 1:
                 
                 # if isinstance(c, list):
                 #     tempList.append(c)
