@@ -1,8 +1,13 @@
 import numpy as np
+
 import sys
 global grid
+global dropCol
+np.set_printoptions(threshold=sys.maxsize)
 def move(pos):
+    # print(pos)
     global grid
+    global dropCol
     while grid[pos[0]][pos[1]] == '.':
         pos = (pos[0] + 1, pos[1])
     pos = (pos[0] -1, pos[1])
@@ -15,18 +20,37 @@ def move(pos):
     else:
         row = pos[0]
         col = pos[1]
-    try:
+    if col -1 == -1 or col + 1 == len(grid[0]):
+        # print(f'{row}, {col}')
+        # print('need to hstack')
+        tempCol = np.chararray((len(grid), 1), unicode=True)
+        with np.nditer(tempCol, op_flags=['readwrite']) as it:
+            for x in it:
+                x[...] = '.'
+        tempCol[-1] = ['#']
+        if col - 1 == -1:
+            # print('stacking left')
+            grid = np.hstack([tempCol, grid])
+            dropCol += 1
+            col += 1
+        else:
+            # print('stacking right')
+
+            grid = np.hstack([grid, tempCol])
+            # col -= 1
+    try: 
+        # print(f'row: {row} - col: {col}')
         if grid[row + 1][col] == '.' or grid[row + 1][col - 1] == '.' or grid[row + 1][col + 1] == '.':
             return move((row, col))
         else:
             grid[row][col] = 'o'
     except:
         return -1
-    
-    
+
 def main():
     global grid
-    file1 = open('14-test.txt', 'r')
+    global dropCol
+    file1 = open('14-1.txt', 'r')
     Lines = file1.readlines()
     paths = list()
     minRow = 0
@@ -83,13 +107,29 @@ def main():
             for col in range(start, end + 1):
                 grid[p[0][1]][[col]] = '#'
     
+    for c in ['.', '#']:
+        tempRow = list()
+        for _ in range(maxCol - minCol + 1):
+            tempRow.append(c)
+        grid = np.vstack([grid, tempRow])
+
     count = 0
+    colCounter = len(grid[0])
+    dropCol = 500 - minCol
     while (True):
-        result = move((0, 500 - minCol))
-        if result == -1:
+        result = move((0, dropCol))
+        # if result == -1:
+        #     print(count)
+        #     return
+        count +=1
+        # print(f"move: {count}")
+        # print(grid)
+        # step 40 is where the flaw in the logic is shown
+        if grid[0][dropCol] == "o":
             print(count)
             return
-        count +=1
+    
+        
         
 if __name__ == "__main__":
     main()
